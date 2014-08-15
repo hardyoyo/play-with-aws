@@ -1,0 +1,98 @@
+Content-Type: multipart/mixed; boundary="===============0035287898381899620=="
+MIME-Version: 1.0
+ 
+--===============0035287898381899620==
+Content-Type: text/cloud-config; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="cloud-config.txt"
+ 
+#cloud-config
+# Cloud-Init Hints:
+# * Some default settings are in /etc/cloud/cloud.cfg
+# * Some examples at: http://cloudinit.readthedocs.org/en/latest/topics/examples.html
+# * more info: https://help.ubuntu.com/community/CloudInit
+ 
+preserve_hostname: true
+manage_etc_hosts: false
+ 
+# dynamically set hostname using the instance's instanceid
+bootcmd:
+ - cloud-init-per instance my_set_hostname sh -xc "echo duraspace-devops-$INSTANCE_ID > /etc/hostname; hostname -F /etc/hostname"
+ 
+# Add apt repositories
+apt_sources:
+ # Enable "multiverse" repos
+ - source: deb $MIRROR $RELEASE multiverse
+ - source: deb-src $MIRROR $RELEASE multiverse
+ - source: deb $MIRROR $RELEASE-updates multiverse
+ - source: deb-src $MIRROR $RELEASE-updates multiverse
+ - source: deb http://security.ubuntu.com/ubuntu $RELEASE-security multiverse
+ - source: deb-src http://security.ubuntu.com/ubuntu $RELEASE-security multiverse
+ # Enable "partner" repos
+ - source: deb http://archive.canonical.com/ubuntu $RELEASE partner
+ - source: deb-src http://archive.canonical.com/ubuntu $RELEASE partner
+ # Enable PuppetLabs repos (for latest version of puppet)
+ - source: deb http://apt.puppetlabs.com $RELEASE main dependencies
+   keyid: 4BD6EC30    # GPG key ID published on a key server
+   filename: puppetlabs.list
+ - source: deb-src http://apt.puppetlabs.com $RELEASE main dependencies
+   keyid: 4BD6EC30    # GPG key ID published on a key server
+   filename: puppetlabs.list
+ 
+# Run 'apt-get update' on first boot
+apt_update: true
+ 
+# Run 'apt-get upgrade' on first boot
+apt_upgrade: true
+ 
+# Reboot after package install/upgrade if needed (e.g. if kernel update)
+apt_reboot_if_required: True
+ 
+# Install additional packages on first boot
+packages:
+ - wget
+ - git
+ - puppet
+ - rubygems   # Used to install librarian-puppet
+ - python-pip # Used to install awscli
+ 
+# run commands
+# runcmd contains a list of either lists or a string
+# each item will be executed in order
+runcmd:
+ # Install AWS CLI
+ - pip install awscli
+ # Install librarian-puppet for retrieving dependent puppet modules from github
+ - gem install librarian-puppet
+ # Add github.com to known_hosts
+ - ssh -T -oStrictHostKeyChecking=no git@github.com
+ 
+# set the locale
+locale: en_US.UTF-8
+ 
+# timezone: set the timezone for this instance
+timezone: UTC
+ 
+# Log all cloud-init process output (info & errors) to a logfile
+output: {all: ">> /var/log/cloud-init-output.log"}
+ 
+# final_message written to log when cloud-init processes are finished
+final_message: "System boot (via cloud-init) is COMPLETE, after $UPTIME seconds. Finished at $TIMESTAMP"
+ 
+--===============0035287898381899620==
+Content-Type: text/x-shellscript; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="user-script.txt"
+ 
+#!/bin/bash
+#TODO: change this to my own puppet repository
+git clone -b master git@github.com:uberco/puppet-uberapp.git /etc/puppet/
+# Run librarian-puppet
+cd /etc/puppet && HOME=/root librarian-puppet install
+ 
+# Run puppet
+puppet apply /etc/puppet/manifests/site.pp
+ 
+--===============0035287898381899620==--
