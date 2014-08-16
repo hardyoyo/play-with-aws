@@ -23,8 +23,10 @@ manage_etc_hosts: false
  
 # dynamically set hostname using the instance's instanceid
 bootcmd:
- - cloud-init-per instance my_set_hostname sh -xc "echo duraspace-devops-$INSTANCE_ID > /etc/hostname; hostname -F /etc/hostname"
- 
+ - cloud-init-per instance my_set_hostname sh -xc "echo hardyoyo-devops-$INSTANCE_ID > /etc/hostname; hostname -F /etc/hostname"
+
+# TODO: figure out if I can replace any of this with librarian-puppet-bootstrap.sh
+
 # Add apt repositories
 apt_sources:
  # Enable "multiverse" repos
