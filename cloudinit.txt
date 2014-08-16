@@ -88,7 +88,7 @@ Content-Disposition: attachment; filename="user-script.txt"
  
 #!/bin/bash
 #TODO: change this to my own puppet repository
-git clone -b master git@github.com:hardyoyo/devops-puppet.git /etc/puppet/
+git clone -b master git@github.com:hardyoyo/fedora-puppet.git /etc/puppet/
 # Run librarian-puppet
 cd /etc/puppet && HOME=/root librarian-puppet install
  
