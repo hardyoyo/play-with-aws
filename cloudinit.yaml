@@ -61,7 +61,7 @@ packages:
  - wget
  - git
  - puppet
- - rubygems   # Used to install librarian-puppet
+ - rubygems-integration   # Used to install librarian-puppet
  - python-pip # Used to install awscli
  
 # run commands
