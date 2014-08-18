@@ -54,7 +54,8 @@ apt_update: true
 apt_upgrade: true
  
 # Reboot after package install/upgrade if needed (e.g. if kernel update)
-apt_reboot_if_required: True
+# normally it's a good idea to set this to True, but let's set it to false until things settle down
+apt_reboot_if_required: False
  
 # Install additional packages on first boot
 packages:
@@ -75,6 +76,7 @@ runcmd:
  # Add github.com to known_hosts
  - ssh -T -oStrictHostKeyChecking=no git@github.com
  
+
 # set the locale
 locale: en_US.UTF-8
  
@@ -94,11 +96,29 @@ Content-Transfer-Encoding: 7bit
 Content-Disposition: attachment; filename="user-script.txt"
  
 #!/bin/bash
-#TODO: change this to my own puppet repository
-git clone -b master git@github.com:hardyoyo/fedora-puppet.git /etc/puppet/
-# Run librarian-puppet
-cd /etc/puppet && HOME=/root librarian-puppet install
- 
+
+# ensure puppet actually turns on
+mv /etc/default/puppet /etc/default/puppet.orig
+echo "START=yes" > /etc/default/puppet
+
+# move the original puppet config out of the way
+mv /etc/puppet /etc/puppet.orig
+
+# clone my puppet config
+git clone -b master https://github.com/hardyoyo/fedora-puppet.git /etc/puppet/
+
+# Install 'librarian-puppet' and all third-party modules configured in 'Puppetfile'
+if [ "$(gem search -i librarian-puppet)" = "false" ]; then
+  echo "Installing librarian-puppet..."
+  gem install librarian-puppet --version 1.0.3 >/dev/null
+  echo "librarian-puppet installed!"
+  echo "Installing third-party Puppet modules (via librarian-puppet)..."
+  cd /etc/puppet && HOME=/root librarian-puppet install --clean
+else
+  echo "Updating third-party Puppet modules (via librarian-puppet)..."
+  cd /etc/puppet && HOME=/root librarian-puppet update
+fi
+
 # Run puppet
 puppet apply /etc/puppet/manifests/site.pp
  
