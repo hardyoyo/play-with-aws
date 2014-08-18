@@ -63,6 +63,7 @@ packages:
  - rubygems-integration   # Used to install librarian-puppet
  - python-pip # Used to install awscli
  - rcconf # Used to set runlevels of services
+ - unzip # Used by the Tomcat Puppet module we're using
  
 # run commands
 # runcmd contains a list of either lists or a string
