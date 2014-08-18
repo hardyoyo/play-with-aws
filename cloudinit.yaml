@@ -62,7 +62,6 @@ packages:
  - puppet
  - rubygems-integration   # Used to install librarian-puppet
  - python-pip # Used to install awscli
- - rconf # required for puppet, dunno why
  
 # run commands
 # runcmd contains a list of either lists or a string
