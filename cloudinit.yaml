@@ -111,13 +111,13 @@ if [ "$(gem search -i librarian-puppet)" = "false" ]; then
   gem install librarian-puppet --version 1.0.3 >/dev/null
   echo "librarian-puppet installed!"
   echo "Installing third-party Puppet modules (via librarian-puppet)..."
-  cd /etc/puppet && HOME=/root librarian-puppet install --clean
+  cd /etc/puppet && HOME=/root librarian-puppet install --clean --verbose
 else
   echo "Updating third-party Puppet modules (via librarian-puppet)..."
-  cd /etc/puppet && HOME=/root librarian-puppet update
+  cd /etc/puppet && HOME=/root librarian-puppet update --verbose
 fi
 
 # Run puppet
-puppet apply /etc/puppet/manifests/site.pp
+puppet apply -tvd /etc/puppet/manifests/site.pp
  
 --===============0035287898381899620==--
