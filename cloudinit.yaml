@@ -25,8 +25,6 @@ manage_etc_hosts: false
 bootcmd:
  - cloud-init-per instance my_set_hostname sh -xc "echo hardyoyo-devops-$INSTANCE_ID > /etc/hostname; hostname -F /etc/hostname"
 
-# TODO: figure out if I can replace any of this with librarian-puppet-bootstrap.sh
-
 # Add apt repositories
 apt_sources:
  # Enable "multiverse" repos
@@ -64,6 +62,7 @@ packages:
  - puppet
  - rubygems-integration   # Used to install librarian-puppet
  - python-pip # Used to install awscli
+ - -rconf # required for puppet, dunno why
  
 # run commands
 # runcmd contains a list of either lists or a string
