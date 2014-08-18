@@ -71,8 +71,6 @@ packages:
 runcmd:
  # Install AWS CLI
  - pip install awscli
- # Install librarian-puppet for retrieving dependent puppet modules from github
- - gem install librarian-puppet
  # Add github.com to known_hosts
  - ssh -T -oStrictHostKeyChecking=no git@github.com
  
