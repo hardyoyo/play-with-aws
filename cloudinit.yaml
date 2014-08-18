@@ -105,7 +105,7 @@ echo "START=yes" > /etc/default/puppet
 mv /etc/puppet /etc/puppet.orig
 
 # clone my puppet config
-git clone -b master https://github.com/hardyoyo/fedora-puppet.git /etc/puppet/
+git clone -b master http://github.com/hardyoyo/fedora-puppet.git /etc/puppet/
 
 # Install 'librarian-puppet' and all third-party modules configured in 'Puppetfile'
 if [ "$(gem search -i librarian-puppet)" = "false" ]; then
