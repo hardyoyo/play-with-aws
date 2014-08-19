@@ -63,7 +63,9 @@ packages:
  - rubygems-integration   # Used to install librarian-puppet
  - python-pip # Used to install awscli
  - rcconf # Used to set runlevels of services
- - unzip # Used by the Tomcat Puppet module we're using
+ - unzip # comes in handy 
+ - authbind # Used by Tomcat to bind to a priveleged port
+ - tomcat6 
  
 # run commands
 # runcmd contains a list of either lists or a string
@@ -111,10 +113,10 @@ if [ "$(gem search -i librarian-puppet)" = "false" ]; then
   gem install librarian-puppet --version 1.0.3 >/dev/null
   echo "librarian-puppet installed!"
   echo "Installing third-party Puppet modules (via librarian-puppet)..."
-  cd /etc/puppet && HOME=/root librarian-puppet install --clean --verbose
+  cd /etc/puppet && HOME=/root librarian-puppet install --no-destructive --verbose
 else
   echo "Updating third-party Puppet modules (via librarian-puppet)..."
-  cd /etc/puppet && HOME=/root librarian-puppet update --verbose
+  cd /etc/puppet && HOME=/root librarian-puppet update --no-destructive --verbose
 fi
 
 # Run puppet
