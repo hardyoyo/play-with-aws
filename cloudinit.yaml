@@ -75,7 +75,8 @@ runcmd:
  - pip install awscli
  # Add github.com to known_hosts
  - ssh -T -oStrictHostKeyChecking=no git@github.com
- 
+ # copy the tomcat-users.xml file from my tomcat-users bucket on S3
+ - aws --region us-east-1 s3cp s3://tomcat-users/tomcat-users.xml /etc/tomcat6/tomcat-users.xml
 
 # set the locale
 locale: en_US.UTF-8
