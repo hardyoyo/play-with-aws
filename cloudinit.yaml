@@ -1,4 +1,4 @@
-Content-Type: multipart/mixed; boundary="===============0035287898381899620=="
+Content-Type: multipart/mixed; boundary="--=============0035287898381899620=="
 MIME-Version: 1.0
  
 --===============0035287898381899620==
@@ -75,8 +75,10 @@ runcmd:
  - pip install awscli
  # Add github.com to known_hosts
  - ssh -T -oStrictHostKeyChecking=no git@github.com
- # copy the tomcat-users.xml file from my tomcat-users bucket on S3
- - aws --region us-east-1 s3cp s3://tomcat-users/tomcat-users.xml /etc/tomcat6/tomcat-users.xml
+
+# copy the tomcat-users.xml file from my tomcat-users bucket on S3
+- aws --region us-east-1 s3cp s3://tomcat-users/tomcat-users.xml /root/tomcat-users.xml
+
 
 # set the locale
 locale: en_US.UTF-8
@@ -122,6 +124,9 @@ fi
 
 # Run puppet 
 puppet apply -tvd /etc/puppet/manifests/site.pp
+
+# cp tomcat-users to its proper place
+cp /root/tomcat-users.xml /etc/tomcat6/tomcat-users.xml
 
 # Restart tomcat so all new configs from Puppet are picked up
 service tomcat6 restart
