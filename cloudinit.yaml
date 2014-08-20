@@ -119,7 +119,11 @@ else
   cd /etc/puppet && HOME=/root librarian-puppet update --no-destructive --verbose
 fi
 
-# Run puppet
+# Run puppet 
 puppet apply -tvd /etc/puppet/manifests/site.pp
- 
+
+# Restart tomcat so all new configs from Puppet are picked up
+service tomcat6 restart
+
+
 --===============0035287898381899620==--
